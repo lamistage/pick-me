@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro
+        http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    <changeSet author="nica" id="5">
+        <addForeignKeyConstraint baseTableName="image_tag" baseColumnNames="image_id" constraintName="fk_image_tag_image" referencedTableName="image" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="image_tag" baseColumnNames="tag_id" constraintName="fk_image_tag_tag" referencedTableName="tag" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

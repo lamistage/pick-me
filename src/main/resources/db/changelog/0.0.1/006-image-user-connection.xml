@@ -11,6 +11,6 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
     <changeSet author="nica" id="6">
-        <addForeignKeyConstraint baseTableName="image" baseColumnNames="user_id" constraintName="fk_image_user" referencedTableName="user" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="image" baseColumnNames="user_id" constraintName="fk_image_user" referencedTableName="app_user" referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

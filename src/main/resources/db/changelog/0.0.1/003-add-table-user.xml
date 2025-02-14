@@ -11,10 +11,14 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
     <changeSet author="nica" id="3">
-        <createTable tableName="user">
+        <createTable tableName="app_user">
             <column name="id" type="INTEGER"> <constraints nullable="false" primaryKey="true"/> </column>
             <column name="login" type="VARCHAR(256)"> <constraints nullable="false" unique="true"/> </column>
             <column name="password" type="VARCHAR(256)"> <constraints nullable="false"/> </column>
         </createTable>
+    </changeSet>
+
+    <changeSet author="nica" id="3-1">
+        <createSequence incrementBy="1" sequenceName="user_id_seq" startValue="1"/>
     </changeSet>
 </databaseChangeLog>

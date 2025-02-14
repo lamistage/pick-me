@@ -15,22 +15,13 @@ import java.util.List;
 public class Image {
     @Schema(description = "Entity identifier", example = "1")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @SequenceGenerator(name = "IMAGE_ID_GENERATOR", sequenceName = "image_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IMAGE_ID_GENERATOR")
     private Integer id;
 
-    @Schema(description = "Byte array representing the image", example="[2, 34, 76, 123, 57, 254]")
-    @Lob
-    @Column(name = "data")
-    private byte[] data;
-
-    @Schema(description = "Name of the file", example = "image1.jpg")
-    @Column(name = "file_name")
-    private String fileName;
-
-    @Schema(description = "Type of the file", example = "jpg")
-    @Column(name = "file_type")
-    private String fileType;
+    @Schema(description = "Path to the image file", example="media/db-files/a5f9fca9-de57-439e-b1f2-eda7355e1419")
+    @Column(name = "file_path")
+    private String filePath;
 
     @Schema(description = "Image upload date", example = "Thu Feb 21 14:01:34 EET 2019")
     @Column(name = "date")
@@ -46,5 +37,5 @@ public class Image {
     @JoinTable(name = "image_tag",
             joinColumns = {@JoinColumn(name = "image_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-    private List<Tag> Tags;
+    private List<Tag> tags;
 }

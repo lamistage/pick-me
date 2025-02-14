@@ -1,0 +1,20 @@
+package com.pick_me.backend.image.service;
+
+import com.pick_me.backend.image.entity.Image;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.query.Page;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public interface ImageService {
+
+    Image one(@NotNull Integer id);
+
+    Image save(Image image);
+
+    Image update(Image image);
+
+    void remove(Integer id);
+}

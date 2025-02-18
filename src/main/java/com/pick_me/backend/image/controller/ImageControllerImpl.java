@@ -2,7 +2,6 @@ package com.pick_me.backend.image.controller;
 
 import com.pick_me.backend.image.entity.Image;
 import com.pick_me.backend.image.service.ImageService;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -19,8 +18,8 @@ public class ImageControllerImpl implements ImageController{
     }
 
     @Override
-    public Page<Image> list(Pageable pageable, List<String> sort, List<Integer> tags, List<Integer> users) {
-        return null;
+    public Page<Image> page(Pageable pageable, List<Integer> tagIds, List<Integer> userIds, String sort) {
+        return service.page(pageable, tagIds, userIds, sort);
     }
 
     @Override

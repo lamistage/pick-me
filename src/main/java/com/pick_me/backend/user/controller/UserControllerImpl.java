@@ -1,8 +1,6 @@
 package com.pick_me.backend.user.controller;
 
 import com.pick_me.backend.user.entity.User;
-import com.pick_me.backend.user.repository.UserRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Controller;
 import com.pick_me.backend.user.service.UserService;
 

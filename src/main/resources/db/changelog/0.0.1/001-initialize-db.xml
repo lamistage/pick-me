@@ -2,20 +2,14 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
-        http://www.liquibase.org/xml/ns/pro
-        http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet author="nica" id="1">
         <createTable tableName="image">
             <column name="id" type="INTEGER"> <constraints nullable="false" primaryKey="true"/> </column>
             <column name="file_path" type="VARCHAR(256)"> <constraints nullable="false"/> </column>
             <column name="user_id" type="INTEGER"> <constraints nullable="false"/> </column>
-            <column name="date" type="DATETIME"> <constraints nullable="false"/> </column>
+            <column name="date" type="timestamp"> </column>
         </createTable>
     </changeSet>
 

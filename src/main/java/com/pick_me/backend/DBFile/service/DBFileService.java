@@ -1,7 +1,6 @@
 package com.pick_me.backend.DBFile.service;
 
 import com.pick_me.backend.DBFile.entity.DBFile;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -11,13 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RequestMapping("/api/db-file")
 @Tag(name = "DBFile", description = "Allows to get info about all files, loaded by user to the system")
 @RestController
 public interface DBFileController {
+
     @Operation(
             summary = "Download file by id",
             description = "Method allows to download files by identifier"
@@ -33,7 +33,6 @@ public interface DBFileController {
                     required = true,
                     example = "65ffdf-54bvvb-54f5ddfdf5df54fd-5cg4cgcg"
             ) @PathVariable String fileId);
-
 
     @Operation(
             summary = "Save user image",

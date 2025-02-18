@@ -25,7 +25,6 @@ public class DBFile {
     @Lob
     private byte[] data;
 
-
     public DBFile(String fileType, byte[] data) {
         this.fileType = fileType;
         this.data = data;

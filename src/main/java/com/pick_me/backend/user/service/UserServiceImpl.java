@@ -2,7 +2,6 @@ package com.pick_me.backend.user.service;
 
 import com.pick_me.backend.user.entity.User;
 import com.pick_me.backend.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -5,14 +5,19 @@ import com.pick_me.backend.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Date;
+import java.io.Serializable;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @Schema(description = "Images")
-public class Image {
+public class Image implements Serializable {
     @Schema(description = "Entity identifier", example = "1")
     @Id
     @SequenceGenerator(name = "IMAGE_ID_GENERATOR", sequenceName = "image_id_seq", allocationSize = 1)
@@ -25,7 +30,8 @@ public class Image {
 
     @Schema(description = "Image upload date", example = "Thu Feb 21 14:01:34 EET 2019")
     @Column(name = "date")
-    private Date date;
+    @CreatedDate
+    private LocalDateTime date;
 
     @Schema(description = "User, who load the image", example = "[id: 1, login = 'nica', password = 'qwhdtags3j2!']")
     @ManyToOne

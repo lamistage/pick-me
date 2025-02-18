@@ -20,22 +20,15 @@ import java.util.List;
 @Tag(name = "Image", description = "Allows to get, update, add and delete info about image")
 @RestController
 public interface ImageController {
+
     @Operation(
             summary = "Get paginated list of images with filter",
             description = "Method, that allows to get paginated list of images with filter"
     )
     @GetMapping
     @PageableAsQueryParam
-    Page<Image> list(
+    Page<Image> page(
             Pageable pageable,
-            @Parameter(
-                    description = "Names of parameters to sort by",
-                    array = @ArraySchema(
-                            schema = @Schema(
-                                    implementation = String.class
-                            )
-                    )
-            ) @RequestParam(value = "sort", required = false) List<String> sort,
             @Parameter(
                     description = "List of identifiers of tags",
                     array = @ArraySchema(
@@ -43,7 +36,7 @@ public interface ImageController {
                                     implementation = Integer.class
                             )
                     )
-            ) @RequestParam(value = "tag", required = false) List<Integer> tags,
+            ) @RequestParam(value = "tag", required = false) List<Integer> tagIds,
             @Parameter(
                     description = "List of identifiers users",
                     array = @ArraySchema(
@@ -51,7 +44,16 @@ public interface ImageController {
                                     implementation = Integer.class
                             )
                     )
-            ) @RequestParam(value = "user", required = false) List<Integer> users);
+            ) @RequestParam(value = "user", required = false) List<Integer> userIds,
+            @Parameter(
+                    description = "The parameters by which the sorting will take place. The first value is a parameter, the second is a method (desc, asc). Separated by commas.",
+                    example = "date,desc",
+                    content = @Content(
+                            schema = @Schema(
+                                    allowableValues = {"date"}
+                            )
+                    )
+            ) @RequestParam(value = "sort", required = false) String sort);
 
     @Operation(
             summary = "Get image by id",
@@ -124,7 +126,6 @@ public interface ImageController {
                             )
                     )
             ) @RequestBody Image image);
-
 
     @Operation(
             summary = "Deletion of image by id",

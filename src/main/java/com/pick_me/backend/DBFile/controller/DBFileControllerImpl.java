@@ -2,7 +2,6 @@ package com.pick_me.backend.DBFile.controller;
 
 import com.pick_me.backend.DBFile.entity.DBFile;
 import com.pick_me.backend.DBFile.service.DBFileService;
-import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
@@ -12,12 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 
 @RestController
 public class DBFileControllerImpl implements DBFileController {

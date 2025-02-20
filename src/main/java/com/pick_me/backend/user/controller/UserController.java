@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User", description = "Allows to get, add, update and remove info about user")
 @RestController
 public interface UserController {
+
     @Operation(
             summary = "Get user by id",
             description = "Method, that allows user get info about him by id"

@@ -1,5 +1,6 @@
 package com.pick_me.backend.image.entity;
 
+import com.pick_me.backend.dto.UserDTO;
 import com.pick_me.backend.tag.entity.Tag;
 import com.pick_me.backend.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,10 +34,10 @@ public class Image implements Serializable {
     @CreatedDate
     private LocalDateTime date;
 
-    @Schema(description = "User, who load the image", example = "[id: 1, login = 'nica', password = 'qwhdtags3j2!']")
+    @Schema(description = "User, who load the image", example = "[id: 1, login = 'nica']")
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserDTO user;
 
     @Schema(description = "List of tags linked to the image", example = "[{id: 1; name: 'kitty'}, {id: 2; name: 'sad'}]")
     @ManyToMany

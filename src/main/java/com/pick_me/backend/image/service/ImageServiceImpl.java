@@ -35,7 +35,7 @@ public class ImageServiceImpl implements ImageService {
         BooleanExpression predicate = getPredicate(tagIds, userIds);
         Page<Image> sortedImages;
 
-        if (sort == null || sort.equals("")) {
+        if (sort == null || sort.isEmpty()) {
             sortedImages = imageRepository.findAll(
                     predicate,
                     PageRequest.of(
@@ -68,7 +68,7 @@ public class ImageServiceImpl implements ImageService {
 
     private BooleanExpression getTagIdsPredicate(@Nullable List<Integer> tagIds, QImage qImage) {
         return tagIds != null ?
-                qImage.tags.any().id.in(tagIds)  // норм?
+                qImage.tags.any().id.in(tagIds)
                 : null;
     }
 

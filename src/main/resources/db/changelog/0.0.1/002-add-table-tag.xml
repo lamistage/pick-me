@@ -6,12 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet author="nica" id="2">
         <createTable tableName="tag">
-            <column name="id" type="INTEGER"> <constraints nullable="false" primaryKey="true"/> </column>
-            <column name="name" type="VARCHAR(256)"> <constraints nullable="false" unique="true"/> </column>
+            <column name="name" type="VARCHAR(256)"> <constraints nullable="false" primaryKey="true"/> </column>
         </createTable>
-    </changeSet>
-
-    <changeSet author="nica" id="2-1">
-        <createSequence incrementBy="1" sequenceName="tag_id_seq" startValue="1"/>
     </changeSet>
 </databaseChangeLog>

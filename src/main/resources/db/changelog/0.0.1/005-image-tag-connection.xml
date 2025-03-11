@@ -6,6 +6,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet author="nica" id="5">
         <addForeignKeyConstraint baseTableName="image_tag" baseColumnNames="image_id" constraintName="fk_image_tag_image" referencedTableName="image" referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="image_tag" baseColumnNames="tag_id" constraintName="fk_image_tag_tag" referencedTableName="tag" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="image_tag" baseColumnNames="tag_name" constraintName="fk_image_tag_tag" referencedTableName="tag" referencedColumnNames="name"/>
     </changeSet>
 </databaseChangeLog>

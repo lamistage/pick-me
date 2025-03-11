@@ -12,8 +12,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
-@Entity
-@Table(name = "app_user")
 @Schema(description = "Users")
 @Data
 @AllArgsConstructor

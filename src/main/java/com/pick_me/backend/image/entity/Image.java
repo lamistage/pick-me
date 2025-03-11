@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
@@ -32,6 +33,7 @@ public class Image implements Serializable {
     @Schema(description = "Image upload date", example = "Thu Feb 21 14:01:34 EET 2019")
     @Column(name = "date")
     @CreatedDate
+    @LastModifiedDate
     private LocalDateTime date;
 
     @Schema(description = "User, who load the image", example = "[id: 1, login = 'nica']")
@@ -43,6 +45,6 @@ public class Image implements Serializable {
     @ManyToMany
     @JoinTable(name = "image_tag",
             joinColumns = {@JoinColumn(name = "image_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+            inverseJoinColumns = {@JoinColumn(name = "tag_name")})
     private List<Tag> tags;
 }

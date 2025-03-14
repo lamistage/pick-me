@@ -18,8 +18,8 @@ public class ImageControllerImpl implements ImageController{
     }
 
     @Override
-    public Page<Image> page(Pageable pageable, List<Integer> tagIds, List<Integer> userIds, String sort) {
-        return service.page(pageable, tagIds, userIds, sort);
+    public Page<Image> page(Pageable pageable, List<String> tags, List<String> userLogins, String sort) {
+        return service.page(pageable, tags, userLogins, sort);
     }
 
     @Override

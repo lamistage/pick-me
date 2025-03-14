@@ -30,21 +30,21 @@ public interface ImageController {
     Page<Image> page(
             Pageable pageable,
             @Parameter(
-                    description = "List of identifiers of tags",
+                    description = "List of tags",
                     array = @ArraySchema(
                             schema = @Schema(
-                                    implementation = Integer.class
+                                    implementation = String.class
                             )
                     )
-            ) @RequestParam(value = "tag", required = false) List<Integer> tagIds,
+            ) @RequestParam(value = "tag", required = false) List<String> tags,
             @Parameter(
-                    description = "List of identifiers users",
+                    description = "List of logins of users",
                     array = @ArraySchema(
                             schema = @Schema(
-                                    implementation = Integer.class
+                                    implementation = String.class
                             )
                     )
-            ) @RequestParam(value = "user", required = false) List<Integer> userIds,
+            ) @RequestParam(value = "user", required = false) List<String> userLogins,
             @Parameter(
                     description = "The parameters by which the sorting will take place. The first value is a parameter, the second is a method (desc, asc). Separated by commas.",
                     example = "date,desc",

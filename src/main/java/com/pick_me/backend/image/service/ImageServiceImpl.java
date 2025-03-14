@@ -31,8 +31,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Page<Image> page(Pageable pageable, @Nullable List<Integer> tagIds, @Nullable List<Integer> userIds, String sort) {
-        BooleanExpression predicate = getPredicate(tagIds, userIds);
+    public Page<Image> page(Pageable pageable, @Nullable List<String> tags, @Nullable List<String> userLogins, String sort) {
+        BooleanExpression predicate = getPredicate(tags, userLogins);
         Page<Image> sortedImages;
 
         if (sort == null || sort.isEmpty()) {
@@ -55,10 +55,10 @@ public class ImageServiceImpl implements ImageService {
         return sortedImages;
     }
 
-    private BooleanExpression getPredicate(@Nullable List<Integer> tagIds, @Nullable List<Integer> userIds) {
+    private BooleanExpression getPredicate(@Nullable List<String> tags, @Nullable List<String> userLogins) {
         QImage qImage = QImage.image;
-        BooleanExpression tagIdsPredicate = getTagIdsPredicate(tagIds, qImage);
-        BooleanExpression userIdsPredicate = getUserIdsPredicate(userIds, qImage);
+        BooleanExpression tagIdsPredicate = getTagsPredicate(tags, qImage);
+        BooleanExpression userIdsPredicate = getUserLoginsPredicate(userLogins, qImage);
         BooleanExpression predicate;
         predicate = (tagIdsPredicate != null ? tagIdsPredicate : TRUE_EXPRESSION)
                 .and(userIdsPredicate != null ? userIdsPredicate : TRUE_EXPRESSION);
@@ -66,15 +66,15 @@ public class ImageServiceImpl implements ImageService {
         return predicate;
     }
 
-    private BooleanExpression getTagIdsPredicate(@Nullable List<Integer> tagIds, QImage qImage) {
-        return tagIds != null ?
-                qImage.tags.any().id.in(tagIds)
+    private BooleanExpression getTagsPredicate(@Nullable List<String> tags, QImage qImage) {
+        return tags != null ?
+                qImage.tags.any().name.in(tags)
                 : null;
     }
 
-    private BooleanExpression getUserIdsPredicate(@Nullable List<Integer> userIds, QImage qImage) {
-        return userIds != null ?
-                qImage.user.id.in(userIds)
+    private BooleanExpression getUserLoginsPredicate(@Nullable List<String> userLogins, QImage qImage) {
+        return userLogins != null ?
+                qImage.user.login.in(userLogins)
                 : null;
     }
 

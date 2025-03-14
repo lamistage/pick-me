@@ -26,7 +26,7 @@ public class Image implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IMAGE_ID_GENERATOR")
     private Integer id;
 
-    @Schema(description = "Path to the image file", example="media/db-files/a5f9fca9-de57-439e-b1f2-eda7355e1419")
+    @Schema(description = "Path to the image file", example="db-files/a5f9fca9-de57-439e-b1f2-eda7355e1419")
     @Column(name = "file_path")
     private String filePath;
 

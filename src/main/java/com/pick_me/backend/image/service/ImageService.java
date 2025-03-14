@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public interface ImageService {
-    Page<Image> page(Pageable pageable, @Nullable List<Integer> tagIds, @Nullable List<Integer> userIds, String sort);
+    Page<Image> page(Pageable pageable, @Nullable List<String> tags, @Nullable List<String> userLogins, String sort);
 
     Image one(@NotNull Integer id);
 

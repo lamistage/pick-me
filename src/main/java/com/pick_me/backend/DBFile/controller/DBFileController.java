@@ -60,4 +60,20 @@ public interface DBFileController {
                             )
                     )
             ) @RequestParam(required = false) MultipartFile image);
+
+    @Operation(
+            summary = "Deletion of file by id",
+            description = "Method, that allows to delete a file by id"
+    )
+    @ApiResponse(
+            responseCode = "200, 204",
+            description = "Deletion was successful"
+    )
+    @DeleteMapping("/{fileId}")
+    void removeFile(
+            @Parameter(
+                    description = "Entity id",
+                    required = true,
+                    example = "65ffdf-54bvvb-54f5ddfdf5df54fd-5cg4cgcg"
+            ) @PathVariable String fileId);
 }

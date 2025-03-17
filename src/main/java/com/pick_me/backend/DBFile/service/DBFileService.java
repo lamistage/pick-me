@@ -11,4 +11,6 @@ public interface DBFileService {
     DBFile getFile(String fileId);
 
     String saveImage(MultipartFile image);
+
+    void removeFile(String fileId);
 }

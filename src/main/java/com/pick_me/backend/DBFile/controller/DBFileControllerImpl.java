@@ -41,4 +41,9 @@ public class DBFileControllerImpl implements DBFileController {
         objWithFilePath.put("filePath", dbFileService.saveImage(image));
         return objWithFilePath;
     }
+
+    @Override
+    public void removeFile(String fileId) {
+        this.dbFileService.removeFile(fileId);
+    }
 }

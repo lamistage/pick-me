@@ -35,4 +35,9 @@ public class DBFileServiceImpl implements DBFileService{
     public String saveImage(MultipartFile image) {
         return "db-file/" + this.storeFile(image).getId();
     }
+
+    @Override
+    public void removeFile(String fileId) {
+        this.dbFileRepository.deleteById(fileId);
+    }
 }

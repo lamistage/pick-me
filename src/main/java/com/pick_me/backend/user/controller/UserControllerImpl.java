@@ -4,6 +4,8 @@ import com.pick_me.backend.user.entity.User;
 import org.springframework.stereotype.Controller;
 import com.pick_me.backend.user.service.UserService;
 
+import java.util.List;
+
 @Controller
 public class UserControllerImpl implements UserController {
     private final UserService service;
@@ -30,5 +32,10 @@ public class UserControllerImpl implements UserController {
     @Override
     public void remove(Integer userId) {
         this.service.delete(userId);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return this.service.get();
     }
 }

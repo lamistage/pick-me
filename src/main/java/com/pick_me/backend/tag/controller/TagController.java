@@ -4,9 +4,12 @@ import com.pick_me.backend.tag.entity.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequestMapping("/api/tag")
 @RestController
@@ -22,4 +25,7 @@ public interface TagController {
                             )
                     )
             ) @RequestBody Tag tag);
+
+    @GetMapping
+    List<Tag> getAllTags();
 }

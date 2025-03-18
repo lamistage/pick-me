@@ -4,6 +4,8 @@ import com.pick_me.backend.user.entity.User;
 import com.pick_me.backend.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
@@ -30,5 +32,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) {
         this.repository.deleteById(id);
+    }
+
+    @Override
+    public List<User> get() {
+        return (List<User>) repository.findAll();
     }
 }

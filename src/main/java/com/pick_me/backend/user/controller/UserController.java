@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/user")
 @Tag(name = "User", description = "Allows to get, add, update and remove info about user")
 @RestController
@@ -104,4 +106,7 @@ public interface UserController {
                     required = true,
                     example = "1"
             ) @PathVariable Integer userId) throws ChangeSetPersister.NotFoundException;
+
+    @GetMapping
+    List<User> getAllUsers();
 }

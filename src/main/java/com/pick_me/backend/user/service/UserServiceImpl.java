@@ -1,10 +1,12 @@
 package com.pick_me.backend.user.service;
 
+import com.pick_me.backend.dto.UserDTO;
 import com.pick_me.backend.user.entity.User;
 import com.pick_me.backend.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,7 +37,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> get() {
-        return (List<User>) repository.findAll();
+    public List<UserDTO> get() {
+        List<User> users = repository.findAll();
+        return users.stream().map(UserDTO::new).collect(Collectors.toList());
     }
 }

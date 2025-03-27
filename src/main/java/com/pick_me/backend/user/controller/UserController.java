@@ -1,5 +1,6 @@
 package com.pick_me.backend.user.controller;
 
+import com.pick_me.backend.dto.UserDTO;
 import com.pick_me.backend.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -107,6 +108,6 @@ public interface UserController {
                     example = "1"
             ) @PathVariable Integer userId) throws ChangeSetPersister.NotFoundException;
 
-    @GetMapping
-    List<User> getAllUsers();
+    @GetMapping()
+    List<UserDTO> getAllUsers();
 }

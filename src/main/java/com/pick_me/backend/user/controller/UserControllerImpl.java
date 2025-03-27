@@ -1,5 +1,6 @@
 package com.pick_me.backend.user.controller;
 
+import com.pick_me.backend.dto.UserDTO;
 import com.pick_me.backend.user.entity.User;
 import org.springframework.stereotype.Controller;
 import com.pick_me.backend.user.service.UserService;
@@ -35,7 +36,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return this.service.get();
     }
 }

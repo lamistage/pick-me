@@ -1,5 +1,6 @@
 package com.pick_me.backend.user.service;
 
+import com.pick_me.backend.dto.UserDTO;
 import com.pick_me.backend.user.entity.User;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,5 @@ public interface UserService {
 
     void delete(Integer id);
 
-    List<User> get();
+    List<UserDTO> get();
 }

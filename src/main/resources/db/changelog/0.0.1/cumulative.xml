@@ -11,4 +11,5 @@
     <include file="005-image-tag-connection.xml" relativeToChangelogFile="true" />
     <include file="006-image-user-connection.xml" relativeToChangelogFile="true" />
     <include file="007-add-table-file.xml" relativeToChangelogFile="true" />
+    <include file="008-add-table-refresh-tokens.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

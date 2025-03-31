@@ -1,6 +1,9 @@
 package com.pick_me.backend.security;
 
 import com.pick_me.backend.dto.LoginUserDTO;
+import com.pick_me.backend.security.exceptions.InvalidCredentialsException;
+import com.pick_me.backend.security.exceptions.UserAlreadyExistsException;
+import com.pick_me.backend.security.exceptions.UserNotFoundException;
 import com.pick_me.backend.user.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

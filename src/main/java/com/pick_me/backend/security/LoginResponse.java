@@ -11,5 +11,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class LoginResponse {
     private String token;
+    private String refreshToken;
     private long expiresIn;
 }

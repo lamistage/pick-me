@@ -32,6 +32,9 @@ services:
       - POSTGRES_PORT=5432
 
   backend:
+#    build:
+#      context: .
+#      dockerfile: docker/Dockerfile
     image: lamistage/pick-me-backend:0.0.1
     ports:
       - 8080:8080

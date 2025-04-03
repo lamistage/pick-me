@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,14 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String accessSecretKey;
 
+    @Getter
     @Value("${security.jwt.expiration-time}")
     private long accessTokenExpiration;
 
     @Value("${security.jwt.refresh-secret-key}")
     private String refreshSecretKey;
 
+    @Getter
     @Value("${security.jwt.refresh-expiration-time}")
     private long refreshTokenExpiration;
 
@@ -49,14 +52,6 @@ public class JwtService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", user.getId());
         return buildToken(extraClaims, user, refreshTokenExpiration, true);
-    }
-
-    public long getAccessTokenExpiration() {
-        return accessTokenExpiration;
-    }
-
-    public long getRefreshTokenExpiration() {
-        return refreshTokenExpiration;
     }
 
     private String buildToken(

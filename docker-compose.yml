@@ -35,7 +35,7 @@ services:
 #    build:
 #      context: .
 #      dockerfile: docker/Dockerfile
-    image: lamistage/pick-me-backend:0.0.1
+    image: lamistage/pick-me-backend:0.0.2
     ports:
       - 8080:8080
     depends_on:

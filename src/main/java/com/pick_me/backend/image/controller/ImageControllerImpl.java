@@ -1,5 +1,6 @@
 package com.pick_me.backend.image.controller;
 
+import com.pick_me.backend.dto.ImageDTO;
 import com.pick_me.backend.image.entity.Image;
 import com.pick_me.backend.image.service.ImageService;
 import org.springframework.data.domain.Page;
@@ -18,22 +19,22 @@ public class ImageControllerImpl implements ImageController{
     }
 
     @Override
-    public Page<Image> page(Pageable pageable, List<String> tags, List<String> userLogins, String sort) {
+    public Page<ImageDTO> page(Pageable pageable, List<String> tags, List<String> userLogins, String sort) {
         return service.page(pageable, tags, userLogins, sort);
     }
 
     @Override
-    public Image one(Integer imageId) {
+    public ImageDTO one(Integer imageId) {
         return service.one(imageId);
     }
 
     @Override
-    public Image save(Image image) {
+    public ImageDTO save(Image image) {
         return service.save(image);
     }
 
     @Override
-    public Image update(Image image) {
+    public ImageDTO update(Image image) {
         return service.update(image);
     }
 

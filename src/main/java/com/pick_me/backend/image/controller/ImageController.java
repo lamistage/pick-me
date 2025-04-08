@@ -1,5 +1,6 @@
 package com.pick_me.backend.image.controller;
 
+import com.pick_me.backend.dto.ImageDTO;
 import com.pick_me.backend.image.entity.Image;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +28,7 @@ public interface ImageController {
     )
     @GetMapping
     @PageableAsQueryParam
-    Page<Image> page(
+    Page<ImageDTO> page(
             Pageable pageable,
             @Parameter(
                     description = "List of tags",
@@ -64,12 +65,12 @@ public interface ImageController {
             description = "Image by id",
             content = @Content(
                     schema = @Schema(
-                            implementation = Image.class
+                            implementation = ImageDTO.class
                     )
             )
     )
     @GetMapping("/{imageId}")
-    Image one(
+    ImageDTO one(
             @Parameter(
                     description = "Entity id",
                     required = true,
@@ -85,18 +86,18 @@ public interface ImageController {
             description = "New image",
             content = @Content(
                     schema = @Schema(
-                            implementation = Image.class
+                            implementation = ImageDTO.class
                     )
             )
     )
     @PostMapping
-    Image save(
+    ImageDTO save(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Info about image",
                     required = true,
                     content = @Content(
                             schema = @Schema(
-                                    implementation = Image.class
+                                    implementation = ImageDTO.class
                             )
                     )
             ) @RequestBody Image image);
@@ -111,12 +112,12 @@ public interface ImageController {
             description = "Updated image",
             content = @Content(
                     schema = @Schema(
-                            implementation = Image.class
+                            implementation = ImageDTO.class
                     )
             )
     )
     @PutMapping
-    Image update(
+    ImageDTO update(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Info about image",
                     required = true,

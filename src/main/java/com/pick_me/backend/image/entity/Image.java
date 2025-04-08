@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serializable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,10 +42,14 @@ public class Image implements Serializable {
     @JoinColumn(name = "user_id")
     private UserDTO user;
 
-    @Schema(description = "List of tags linked to the image", example = "[{id: 1; name: 'kitty'}, {id: 2; name: 'sad'}]")
+    @Schema(description = "List of tags linked to the image", example = "[name: 'kitty'}, {name: 'sad'}]")
     @ManyToMany
     @JoinTable(name = "image_tag",
             joinColumns = {@JoinColumn(name = "image_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_name")})
     private List<Tag> tags;
+
+    @Schema(description = "List of users who added this image to favorites")
+    @ManyToMany(mappedBy = "favorites")
+    private List<User> likedBy = new ArrayList<>();
 }

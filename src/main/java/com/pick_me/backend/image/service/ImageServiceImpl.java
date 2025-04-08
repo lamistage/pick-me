@@ -1,5 +1,6 @@
 package com.pick_me.backend.image.service;
 
+import com.pick_me.backend.dto.ImageDTO;
 import com.pick_me.backend.image.entity.QImage;
 import com.pick_me.backend.tag.repository.TagRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -31,7 +33,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Page<Image> page(Pageable pageable, @Nullable List<String> tags, @Nullable List<String> userLogins, String sort) {
+    public Page<ImageDTO> page(Pageable pageable, @Nullable List<String> tags, @Nullable List<String> userLogins, String sort) {
         BooleanExpression predicate = getPredicate(tags, userLogins);
         Page<Image> sortedImages;
 
@@ -52,7 +54,7 @@ public class ImageServiceImpl implements ImageService {
                     ));
         }
 
-        return sortedImages;
+        return sortedImages.map(this::convertToImageDTO);
     }
 
     private BooleanExpression getPredicate(@Nullable List<String> tags, @Nullable List<String> userLogins) {
@@ -97,23 +99,45 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image one(Integer id) {
-        return imageRepository.findById(id).get();
+    public ImageDTO one(Integer id) {
+        Optional<Image> imageOptional = imageRepository.findById(id);
+        if (imageOptional.isEmpty()) {
+            throw new RuntimeException("Image not found with id: " + id);
+        }
+        return convertToImageDTO(imageOptional.get());
     }
 
     @Override
-    public Image save(Image image) {
+    public ImageDTO save(Image image) {
         tagRepository.saveAll(image.getTags());
-        return imageRepository.save(image);
+        Image savedImage = imageRepository.save(image);
+        return convertToImageDTO(savedImage);
     }
 
     @Override
-    public Image update(Image image) {
-        return imageRepository.save(image);
+    public ImageDTO update(Image image) {
+        if (!imageRepository.existsById(image.getId())) {
+            throw new RuntimeException("Image not found with id: " + image.getId());
+        }
+        Image updatedImage = imageRepository.save(image);
+        return convertToImageDTO(updatedImage);
     }
 
     @Override
     public void remove(Integer id) {
+        if (!imageRepository.existsById(id)) {
+            throw new RuntimeException("Image not found with id: " + id);
+        }
         this.imageRepository.deleteById(id);
+    }
+
+    private ImageDTO convertToImageDTO(Image image) {
+        ImageDTO imageDTO = new ImageDTO();
+        imageDTO.setId(image.getId());
+        imageDTO.setFilePath(image.getFilePath());
+        imageDTO.setDate(image.getDate());
+        imageDTO.setUser(image.getUser());
+        imageDTO.setTags(image.getTags());
+        return imageDTO;
     }
 }

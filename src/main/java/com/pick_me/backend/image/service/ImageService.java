@@ -1,5 +1,6 @@
 package com.pick_me.backend.image.service;
 
+import com.pick_me.backend.dto.ImageDTO;
 import com.pick_me.backend.image.entity.Image;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -11,13 +12,13 @@ import java.util.List;
 
 @Service
 public interface ImageService {
-    Page<Image> page(Pageable pageable, @Nullable List<String> tags, @Nullable List<String> userLogins, String sort);
+    Page<ImageDTO> page(Pageable pageable, @Nullable List<String> tags, @Nullable List<String> userLogins, String sort);
 
-    Image one(@NotNull Integer id);
+    ImageDTO one(@NotNull Integer id);
 
-    Image save(Image image);
+    ImageDTO save(Image image);
 
-    Image update(Image image);
+    ImageDTO update(Image image);
 
     void remove(Integer id);
 }

@@ -1,5 +1,6 @@
 package com.pick_me.backend.user.entity;
 
+import com.pick_me.backend.image.entity.Image;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,6 +31,15 @@ public class User implements Serializable, UserDetails {
 
     @Schema(description = "User password", example = "qwhdtags3j2!")
     private String password;
+
+    @Schema(description = "List of images added to favorites by user")
+    @ManyToMany
+    @JoinTable(
+            name = "user_image_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private List<Image> favorites = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

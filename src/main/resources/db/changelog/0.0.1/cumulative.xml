@@ -12,4 +12,5 @@
     <include file="006-image-user-connection.xml" relativeToChangelogFile="true" />
     <include file="007-add-table-file.xml" relativeToChangelogFile="true" />
     <include file="008-add-table-refresh-tokens.xml" relativeToChangelogFile="true" />
+    <include file="009-add-table-user-image-likes.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

@@ -35,7 +35,7 @@ services:
 #    build:
 #      context: .
 #      dockerfile: docker/Dockerfile
-    image: lamistage/pick-me-backend:0.0.2
+    image: lamistage/pick-me-backend:0.0.3
     ports:
       - 8080:8080
     depends_on:
@@ -48,7 +48,7 @@ services:
       - POSTGRES_PORT=5432
 
   frontend:
-    image: lamistage/pick-me-frontend:0.0.1
+    image: lamistage/pick-me-frontend:0.0.2
     ports:
       - 4200:4200
     depends_on:

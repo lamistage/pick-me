@@ -7,6 +7,8 @@ import com.pick_me.backend.security.exceptions.UserNotFoundException;
 import com.pick_me.backend.user.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +98,16 @@ public class AuthenticationController {
 
         refreshTokenService.revokeRefreshToken(refreshToken);
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+
+        authenticationService.changePassword(login, request);
+
+        return ResponseEntity.ok("Password changed successfully");
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)

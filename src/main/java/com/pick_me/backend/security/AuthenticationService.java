@@ -65,4 +65,22 @@ public class AuthenticationService {
 
         return user;
     }
+
+    public void changePassword(String login, ChangePasswordRequest request) {
+        User user = userRepository.findByLogin(login);
+        if (user == null) {
+            throw new UserNotFoundException("User with login " + login + " not found");
+        }
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect");
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password must be different from the current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
 }

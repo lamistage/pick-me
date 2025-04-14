@@ -48,7 +48,7 @@ services:
       - POSTGRES_PORT=5432
 
   frontend:
-    image: lamistage/pick-me-frontend:0.0.2
+    image: lamistage/pick-me-frontend:0.0.3
     ports:
       - 4200:4200
     depends_on:

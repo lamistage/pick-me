@@ -73,7 +73,7 @@ public class AuthenticationService {
         }
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Current password is incorrect");
+            throw new IncorrectPasswordException("Current password is incorrect");
         }
 
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {

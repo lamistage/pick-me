@@ -1,6 +1,7 @@
 package com.pick_me.backend.security;
 
 import com.pick_me.backend.dto.LoginUserDTO;
+import com.pick_me.backend.security.exceptions.IncorrectPasswordException;
 import com.pick_me.backend.security.exceptions.InvalidCredentialsException;
 import com.pick_me.backend.security.exceptions.UserAlreadyExistsException;
 import com.pick_me.backend.security.exceptions.UserNotFoundException;
@@ -18,23 +19,47 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailVerificationService emailVerificationService;
 
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            EmailVerificationService emailVerificationService
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailVerificationService = emailVerificationService;
+    }
+
+    public void checkEmailAvailability(String email) {
+        if (userRepository.findByEmail(email) != null) {
+            throw new UserAlreadyExistsException("User with email " + email + " already exists");
+        }
     }
 
     public User signUp(LoginUserDTO input) {
+        if (input.getVerificationCode() == null) {
+            throw new IllegalArgumentException("Verification code is required");
+        }
+
+        boolean isCodeValid = emailVerificationService.verifyCode(input.getEmail(), input.getVerificationCode());
+        if (!isCodeValid) {
+            throw new IllegalArgumentException("Invalid verification code");
+        }
+
         if (userRepository.findByLogin(input.getLogin()) != null) {
             throw new UserAlreadyExistsException("User with login " + input.getLogin() + " already exists");
         }
 
+
+        if (userRepository.findByEmail(input.getEmail()) != null) {
+            throw new UserAlreadyExistsException("User with email " + input.getEmail() + " already exists");
+        }
+
         User user = User.builder()
+                .email(input.getEmail())
                 .login(input.getLogin())
                 .password(passwordEncoder.encode(input.getPassword()))
                 .build();

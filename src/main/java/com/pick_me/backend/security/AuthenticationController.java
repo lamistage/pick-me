@@ -1,10 +1,13 @@
 package com.pick_me.backend.security;
 
+import com.pick_me.backend.dto.EmailRequestDTO;
 import com.pick_me.backend.dto.LoginUserDTO;
+import com.pick_me.backend.security.exceptions.IncorrectPasswordException;
 import com.pick_me.backend.security.exceptions.InvalidCredentialsException;
 import com.pick_me.backend.security.exceptions.UserAlreadyExistsException;
 import com.pick_me.backend.security.exceptions.UserNotFoundException;
 import com.pick_me.backend.user.entity.User;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,17 +25,27 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final RefreshTokenService refreshTokenService;
     private final UserDetailsService userDetailsService;
+    private final EmailVerificationService emailVerificationService;
 
     public AuthenticationController(
             JwtService jwtService,
             AuthenticationService authenticationService,
             RefreshTokenService refreshTokenService,
-            UserDetailsService userDetailsService
+            UserDetailsService userDetailsService,
+            EmailVerificationService emailVerificationService
     ) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.refreshTokenService = refreshTokenService;
         this.userDetailsService = userDetailsService;
+        this.emailVerificationService = emailVerificationService;
+    }
+
+    @PostMapping("/email-confirmation")
+    public ResponseEntity<Integer> confirmEmail(@RequestBody @Valid EmailRequestDTO emailRequest) {
+        authenticationService.checkEmailAvailability(emailRequest.getEmail());
+        int verificationCode = emailVerificationService.generateAndSendVerificationCode(emailRequest.getEmail());
+        return ResponseEntity.ok(verificationCode);
     }
 
     @PostMapping("/sign-up")
@@ -132,6 +145,6 @@ public class AuthenticationController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneralException(Exception ex) {
-        return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -3,6 +3,7 @@ package com.pick_me.backend.user.entity;
 import com.pick_me.backend.image.entity.Image;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -25,6 +26,10 @@ public class User implements Serializable, UserDetails {
     @SequenceGenerator(name = "USER_ID_GENERATOR", sequenceName = "user_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_ID_GENERATOR")
     private Integer id;
+
+    @Schema(description = "User email", example = "qwerty@gmail.com")
+    @Email
+    private String email;
 
     @Schema(description = "User login", example = "nica")
     private String login;

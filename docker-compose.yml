@@ -39,11 +39,12 @@ services:
       - 6379:6379
 
   backend:
-    image: lamistage/pick-me-backend:0.0.5
+    image: lamistage/pick-me-backend:0.0.4
     ports:
       - 8080:8080
     depends_on:
       - db2
+      - redis
     environment:
       - POSTGRES_DB=pick_me_db
       - POSTGRES_USER=pick_me_user
@@ -52,7 +53,7 @@ services:
       - POSTGRES_PORT=5432
 
   frontend:
-    image: lamistage/pick-me-frontend:0.0.4
+    image: lamistage/pick-me-frontend:0.0.3
     ports:
       - 4200:4200
     depends_on:

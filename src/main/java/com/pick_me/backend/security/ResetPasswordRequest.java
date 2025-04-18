@@ -1,0 +1,16 @@
+package com.pick_me.backend.security;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class ResetPasswordRequest {
+    @NotBlank(message = "Login is required")
+    private String login;
+
+    @NotBlank(message = "Code is required")
+    private String code;
+
+    @NotBlank(message = "New password is required")
+    private String newPassword;
+}

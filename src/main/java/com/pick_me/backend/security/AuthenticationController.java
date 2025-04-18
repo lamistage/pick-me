@@ -123,6 +123,18 @@ public class AuthenticationController {
         return ResponseEntity.ok("Password changed successfully");
     }
 
+    @PostMapping("/recovery-password")
+    public ResponseEntity<String> recoveryPassword(@RequestBody @Valid RecoverPasswordRequest request) {
+        authenticationService.recoverPassword(request);
+        return ResponseEntity.ok("Recovery email sent successfully");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        authenticationService.resetPassword(request);
+        return ResponseEntity.ok("Password reset successfully");
+    }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<?> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);

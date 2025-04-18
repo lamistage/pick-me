@@ -108,4 +108,28 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
+
+    public void recoverPassword(RecoverPasswordRequest request) {
+        User user = userRepository.findByLogin(request.getLogin());
+        if (user == null) {
+            throw new UserNotFoundException("User with login " + request.getLogin() + " not found");
+        }
+
+        emailVerificationService.generateAndSendRecoveryCode(user.getEmail(), request.getLogin());
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        User user = userRepository.findByLogin(request.getLogin());
+        if (user == null) {
+            throw new UserNotFoundException("User with login " + request.getLogin() + " not found");
+        }
+
+        boolean isCodeValid = emailVerificationService.verifyRecoveryCode(request.getCode(), request.getLogin());
+        if (!isCodeValid) {
+            throw new IllegalArgumentException("Invalid or expired recovery code");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
 }

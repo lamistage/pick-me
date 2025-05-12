@@ -66,7 +66,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
             helper.setSubject("PickMe - Email Verification Code");
             helper.setText(
                     "<html>" +
-                            "<body>" +
+                            "<body style='color: #000000;'>" +
                             "<h2>Hello from PickMe!</h2>" +
                             "<p>Thank you for signing up. Your verification code is:</p>" +
                             "<h3 style='color: #ff8fa3;'>" + code + "</h3>" +
@@ -127,10 +127,10 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
             helper.setSubject("PickMe - Password Recovery");
             helper.setText(
                     "<html>" +
-                            "<body>" +
+                            "<body style='color: #000000;'>" +
                             "<h2>Hello from PickMe!</h2>" +
                             "<p>You requested to reset your password. Click the link below to set a new password:</p>" +
-                            "<p><a href='" + frontendUrl + "/reset-password?code=" + code + "' style='color: #ff8fa3; text-decoration: none; font-weight: bold;'>Reset Password</a></p>" +
+                            "<p><a href='" + "http://localhost:4200/reset-password?code=" + code + "' style='color: #ff8fa3; text-decoration: none; font-weight: bold;'>Reset Password</a></p>" +
                             "<p>This link will expire in " + ttlMinutes + " minutes.</p>" +
                             "<p>If you didn’t request this, please ignore this email.</p>" +
                             "<p>Best regards,<br>The PickMe Team</p>" +

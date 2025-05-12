@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 HUB_USER='lamistage'
-HUB_PASSWORD="ch=Y,E+JKt)g7Q6"
+HUB_PASSWORD="nofacenocase1801"
 PROJECT='pick-me-backend'
 
 DIR="`dirname "$(readlink -f "$0")"`"

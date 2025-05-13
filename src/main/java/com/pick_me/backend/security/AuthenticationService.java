@@ -110,21 +110,21 @@ public class AuthenticationService {
     }
 
     public void recoverPassword(RecoverPasswordRequest request) {
-        User user = userRepository.findByLogin(request.getLogin());
+        User user = userRepository.findByEmail(request.getEmail());
         if (user == null) {
-            throw new UserNotFoundException("User with login " + request.getLogin() + " not found");
+            throw new UserNotFoundException("User with email " + request.getEmail() + " not found");
         }
 
-        emailVerificationService.generateAndSendRecoveryCode(user.getEmail(), request.getLogin());
+        emailVerificationService.generateAndSendRecoveryCode(user.getEmail(), user.getLogin());
     }
 
     public void resetPassword(ResetPasswordRequest request) {
-        User user = userRepository.findByLogin(request.getLogin());
+        User user = userRepository.findByEmail(request.getEmail());
         if (user == null) {
-            throw new UserNotFoundException("User with login " + request.getLogin() + " not found");
+            throw new UserNotFoundException("User with email " + request.getEmail() + " not found");
         }
 
-        boolean isCodeValid = emailVerificationService.verifyRecoveryCode(request.getCode(), request.getLogin());
+        boolean isCodeValid = emailVerificationService.verifyRecoveryCode(request.getCode(), user.getLogin());
         if (!isCodeValid) {
             throw new IllegalArgumentException("Invalid or expired recovery code");
         }

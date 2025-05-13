@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-HUB_USER='lamistage'
-HUB_PASSWORD="nofacenocase1801"
-PROJECT='pick-me-backend'
+HUB_USER=${HUB_USER:lamistage}
+HUB_PASSWORD=${HUB_PASSWORD:nofacenocase1801}
+PROJECT=${PROJECT:pick-me-backend}
 
 DIR="`dirname "$(readlink -f "$0")"`"
 

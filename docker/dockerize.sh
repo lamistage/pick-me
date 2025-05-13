@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 
-HUB_USER=${HUB_USER:lamistage}
-HUB_PASSWORD=${HUB_PASSWORD:nofacenocase1801}
-PROJECT=${PROJECT:pick-me-backend}
-
 DIR="`dirname "$(readlink -f "$0")"`"
+
+if [[ -f "../.env" ]]; then
+  source "../.env"
+else
+  echo "Warning: .env file not found at ../.env, using default values"
+fi
+
+HUB_USER=${HUB_USER:-lamistage}
+HUB_PASSWORD=${HUB_PASSWORD:-nofacenocase1801}
+PROJECT=${PROJECT:-pick-me-backend}
 
 if [[ -z "${project}" ]]; then
   project=$PROJECT

@@ -51,7 +51,7 @@ services:
       - app-network
 
   backend:
-    image: lamistage/pick-me-backend:0.0.15
+    image: lamistage/pick-me-backend:0.0.16
     ports:
       - 8080:8080
     depends_on:
@@ -65,7 +65,7 @@ services:
       - app-network
 
   frontend:
-    image: lamistage/pick-me-frontend:0.0.7
+    image: lamistage/pick-me-frontend:0.0.8
     ports:
       - 4200:4200
     depends_on:

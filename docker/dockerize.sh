@@ -10,7 +10,7 @@ fi
 
 HUB_USER=${HUB_USER:-lamistage}
 HUB_PASSWORD=${HUB_PASSWORD:-nofacenocase1801}
-PROJECT=${PROJECT:-pick-me-backend}
+PROJECT=${PROJECT_BACKEND:-pick-me-backend}
 
 if [[ -z "${project}" ]]; then
   project=$PROJECT

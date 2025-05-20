@@ -68,23 +68,36 @@ public class AuthenticationService {
     }
 
     public User signIn(LoginUserDTO input) {
-        User user = userRepository.findByLogin(input.getLogin());
-        if (user == null) {
-            throw new UserNotFoundException("User with login " + input.getLogin() + " not found");
+        if ((input.getLogin() == null || input.getLogin().isBlank()) &&
+                (input.getEmail() == null || input.getEmail().isBlank())) {
+            throw new IllegalArgumentException("Either login or email must be provided");
+        }
+
+        User user;
+        if (input.getLogin() != null && !input.getLogin().isBlank()) {
+            user = userRepository.findByLogin(input.getLogin());
+            if (user == null) {
+                throw new UserNotFoundException("User with login " + input.getLogin() + " not found");
+            }
+        } else {
+            user = userRepository.findByEmail(input.getEmail());
+            if (user == null) {
+                throw new UserNotFoundException("User with email " + input.getEmail() + " not found");
+            }
         }
 
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            input.getLogin(),
+                            user.getLogin(),
                             input.getPassword()
                     )
             );
         } catch (AuthenticationException e) {
             if (e.getCause() instanceof UsernameNotFoundException) {
-                throw new UserNotFoundException("User with login " + input.getLogin() + " not found");
+                throw new UserNotFoundException("User not found");
             } else {
-                throw new InvalidCredentialsException("Invalid password for user " + input.getLogin());
+                throw new InvalidCredentialsException("Invalid password");
             }
         }
 

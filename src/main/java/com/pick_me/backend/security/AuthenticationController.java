@@ -8,6 +8,7 @@ import com.pick_me.backend.security.exceptions.UserAlreadyExistsException;
 import com.pick_me.backend.security.exceptions.UserNotFoundException;
 import com.pick_me.backend.user.entity.User;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@Slf4j
 @RequestMapping("/api/auth")
 @RestController
 public class AuthenticationController {
@@ -55,7 +57,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDTO) {
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody UserCred userCred) {
+        String loginOrEmail = userCred.getLoginOrEmail();
+        String password = userCred.getPassword();
+
+        LoginUserDTO loginUserDTO = new LoginUserDTO();
+        loginUserDTO.setPassword(password);
+
+        if (isEmail(loginOrEmail)) {
+            loginUserDTO.setEmail(loginOrEmail);
+        } else {
+            loginUserDTO.setLogin(loginOrEmail);
+        }
+
         User authenticatedUser = authenticationService.signIn(loginUserDTO);
 
         String accessToken = jwtService.generateAccessToken(authenticatedUser);
@@ -158,5 +172,13 @@ public class AuthenticationController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneralException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public boolean isEmail(String input) {
+        if (input == null) return false;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return input.matches(emailRegex);
     }
 }

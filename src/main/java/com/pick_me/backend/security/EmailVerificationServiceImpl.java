@@ -1,5 +1,6 @@
 package com.pick_me.backend.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailException;
@@ -12,6 +13,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class EmailVerificationServiceImpl implements EmailVerificationService {
     private final JavaMailSender javaMailSender;
@@ -38,26 +40,28 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
             System.out.println("Successfully connected to Redis");
         } catch (Exception e) {
             System.err.println("Failed to connect to Redis: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
     @Override
     public int generateAndSendVerificationCode(String email) {
+        log.info("Generating and sending verification code for email={}", email);
         if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            log.warn("Email={} is not valid for verification", email);
             throw new IllegalArgumentException("Invalid email address: " + email);
         }
 
-        System.out.println("Generating code for email: " + email);
+        log.info("Generating code for email={}", email);
         Random random = new Random();
         int code = 1000 + random.nextInt(9000);
-        System.out.println("Generated code: " + code);
+        log.info("Verification code generated for email={}", email);
 
         String redisKey = "email-verification:" + email;
+        log.debug("Storing verification code in Redis: key={}, ttl={} minutes", redisKey, ttlMinutes);
         redisTemplate.opsForValue().set(redisKey, code, ttlMinutes, TimeUnit.MINUTES);
 
         try {
-            System.out.println("Creating email message...");
+            log.info("Creating email message with verification code for email={}", email);
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(fromEmail);
@@ -76,12 +80,11 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
                             "</html>",
                     true
             );
-            System.out.println("Sending email...");
+            log.info("Sending email with verification code for email={}", email);
             javaMailSender.send(message);
-            System.out.println("Email sent successfully");
+            log.info("Email with verification code sent successfully for email={}", email);
         } catch (MailException | MessagingException e) {
-            System.err.println("Email sending failed: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error while sending email with verification code for email={}: {}", email, e.getMessage(), e);
             throw new RuntimeException("Failed to send verification email: " + e.getMessage(), e);
         }
 
@@ -90,35 +93,42 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
 
     @Override
     public boolean verifyCode(String email, int code) {
+        log.info("Verifying code={} for email={}", code, email);
         String redisKey = "email-verification:" + email;
         Integer storedCode = redisTemplate.opsForValue().get(redisKey);
         if (storedCode == null) {
+            log.warn("No verification code found in Redis for email={}", email);
             return false;
         }
 
         boolean isValid = (storedCode == code);
+        log.info("Verification code for email={} is {}", email, isValid ? "valid" : "invalid");
+
         if (isValid) {
             redisTemplate.delete(redisKey);
+            log.info("Deleted verification code for email={}", email);
         }
         return isValid;
     }
 
     @Override
     public int generateAndSendRecoveryCode(String email, String login) {
+        log.info("Generating and sending recovery code for user with email={}", email);
         if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            log.warn("Email={} is not valid for recovery", email);
             throw new IllegalArgumentException("Invalid email address: " + email);
         }
 
-        System.out.println("Generating recovery code for email: " + email + ", login: " + login);
+        log.info("Generating recovery code for email={}", email);
         Random random = new Random();
         int code = 1000 + random.nextInt(9000);
-        System.out.println("Generated recovery code: " + code);
+        log.info("Recovery code generated for email={}", email);
 
         String redisKey = "password-recovery:" + login;
         redisTemplate.opsForValue().set(redisKey, code, ttlMinutes, TimeUnit.MINUTES);
 
         try {
-            System.out.println("Creating recovery email message...");
+            log.info("Creating recovery email message for email={}", email);
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(fromEmail);
@@ -138,12 +148,11 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
                             "</html>",
                     true
             );
-            System.out.println("Sending recovery email...");
+            log.info("Sending recovery email for email={}", email);
             javaMailSender.send(message);
-            System.out.println("Recovery email sent successfully");
+            log.info("Recovery email sent successfully for email={}", email);
         } catch (MailException | MessagingException e) {
-            System.err.println("Recovery email sending failed: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error while sending recovery email for email={}: {}", email, e.getMessage(), e);
             throw new RuntimeException("Failed to send recovery email: " + e.getMessage(), e);
         }
 
@@ -152,27 +161,34 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
 
     @Override
     public boolean verifyRecoveryCode(String code, String login) {
+        log.info("Verify recovery code for user with login={}", login);
         String redisKey = "password-recovery:" + login;
         Integer storedCode = redisTemplate.opsForValue().get(redisKey);
         if (storedCode == null) {
+            log.warn("No recovery code found in Redis for login={}", login);
             return false;
         }
 
         try {
             int providedCode = Integer.parseInt(code);
             boolean isValid = (storedCode == providedCode);
+            log.info("Recovery code for login={} is {}", login, isValid ? "valid" : "invalid");
             if (isValid) {
                 redisTemplate.delete(redisKey);
+                log.info("Deleted recovery code for login={}", login);
             }
             return isValid;
         } catch (NumberFormatException e) {
+            log.warn("Provided recovery code is not a valid integer: {}", code);
             return false;
         }
     }
 
     @Override
     public void deleteRecoveryCode(String login) {
+        log.info("Deleting recovery code for user with login={}", login);
         String redisKey = "password-recovery:" + login;
         redisTemplate.delete(redisKey);
+        log.info("Deleted recovery code for user with login={}", login);
     }
 }

@@ -9,6 +9,7 @@ import com.pick_me.backend.user.entity.User;
 import com.pick_me.backend.user.repository.UserRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class LikeServiceImpl implements LikeService {
     private final UserRepository userRepository;
@@ -30,65 +32,119 @@ public class LikeServiceImpl implements LikeService {
     @Override
     @Transactional
     public void addToFavorites(Integer userId, Integer imageId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+        log.info("Add to favorites: userId={}, imageId={}", userId, imageId);
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+            Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
 
-        if (!user.getFavorites().contains(image)) {
-            user.getFavorites().add(image);
-            userRepository.save(user);
+            if (!user.getFavorites().contains(image)) {
+                user.getFavorites().add(image);
+                userRepository.save(user);
+                log.info("Image id={} added to favorites for user id={}", imageId, userId);
+            } else {
+                log.info("Image id={} already in favorites for user id={}", imageId, userId);
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to ad to favorites: userId={}, imageId={}, error={}", userId, imageId, e.getMessage(), e);
+            throw e;
         }
+
+
     }
 
     @Override
     @Transactional
     public void removeFromFavorites(Integer userId, Integer imageId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+        log.info("Remove from favorites: userId={}, imageId={}", userId, imageId);
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+            Image image = imageRepository.findById(imageId)
+                    .orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
 
-        user.getFavorites().remove(image);
-        userRepository.save(user);
+            if (user.getFavorites().contains(image)) {
+                user.getFavorites().remove(image);
+                userRepository.save(user);
+                log.info("Image id={} removed from favorites for user id={}", imageId, userId);
+            } else {
+                log.info("Image id={} was not in favorites for user id={}", imageId, userId);
+            }
+        } catch (RuntimeException e) {
+            log.error("Failed to remove from favorites: userId={}, imageId={}, error={}", userId, imageId, e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
     public Page<ImageDTO> getFavorites(Integer userId, Pageable pageable, List<String> tags, List<String> userLogins, String sort) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        log.info("Get favorites: userId={}, tags={}, userLogins={}, sort={}, page={}, size={}",
+                userId, tags, userLogins, sort, pageable.getPageNumber(), pageable.getPageSize());
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        List<Image> favorites = user.getFavorites();
-        if (favorites.isEmpty()) {
-            return new PageImpl<>(List.of(), pageable, 0);
+            List<Image> favorites = user.getFavorites();
+            if (favorites.isEmpty()) {
+                log.info("No favorites found for user id={}", userId);
+                return new PageImpl<>(List.of(), pageable, 0);
+            }
+
+            QImage qImage = QImage.image;
+            BooleanExpression predicate = qImage.in(favorites);
+
+            if (tags != null && !tags.isEmpty()) {
+                predicate = predicate.and(qImage.tags.any().name.in(tags));
+            }
+
+            if (userLogins != null && !userLogins.isEmpty()) {
+                predicate = predicate.and(qImage.user.login.in(userLogins));
+            }
+
+            Pageable sortedPageable = applySorting(pageable, sort);
+
+            Page<Image> filteredFavorites = imageRepository.findAll(predicate, sortedPageable);
+            log.info("Found {} favorites for user id={}", filteredFavorites.getTotalElements(), userId);
+            return filteredFavorites.map(this::convertToImageDTO);
+        } catch (RuntimeException e) {
+            log.error("Failed to get favorites for user id={}: {}", userId, e.getMessage(), e);
+            throw e;
         }
-
-        QImage qImage = QImage.image;
-        BooleanExpression predicate = qImage.in(favorites);
-
-        if (tags != null && !tags.isEmpty()) {
-            predicate = predicate.and(qImage.tags.any().name.in(tags));
-        }
-
-        if (userLogins != null && !userLogins.isEmpty()) {
-            predicate = predicate.and(qImage.user.login.in(userLogins));
-        }
-
-        Pageable sortedPageable = applySorting(pageable, sort);
-
-        Page<Image> filteredFavorites = imageRepository.findAll(predicate, sortedPageable);
-        return filteredFavorites.map(this::convertToImageDTO);
     }
 
     @Override
     public List<UserDTO> getUsersWhoLiked(Integer imageId) {
-        Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+        log.info("Get users who liked imageId={}", imageId);
+        try {
+            Image image = imageRepository.findById(imageId)
+                    .orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
 
-        return image.getLikedBy().stream().map(this::convertToUserDTO).collect(Collectors.toList());
+            List<UserDTO> users = image.getLikedBy().stream()
+                    .map(this::convertToUserDTO)
+                    .collect(Collectors.toList());
+            log.info("Found {} users who liked imageId={}", users.size(), imageId);
+            return users;
+        } catch (RuntimeException e) {
+            log.error("Failed to get users who liked imageId={}: {}", imageId, e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
     public boolean isLikedByUser(Integer userId, Integer imageId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+        log.debug("Check if userId={} liked imageId={}", userId, imageId);
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+            Image image = imageRepository.findById(imageId)
+                    .orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
 
-        return user.getFavorites().contains(image);
+            boolean liked = user.getFavorites().contains(image);
+            log.debug("User id={} liked image id={}: {}", userId, imageId, liked);
+            return liked;
+        } catch (RuntimeException e) {
+            log.error("Failed to check like status: userId={}, imageId={}, error={}", userId, imageId, e.getMessage(), e);
+            throw e;
+        }
     }
 
     private Pageable applySorting(Pageable pageable, String sort) {
